@@ -1,0 +1,41 @@
+{%extends 'todoapp/main.html'%}
+{% block content %}
+{% if request.user.is_authenticated%}
+    <h2>Hello {{request.user}}</h2>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <input type="submit" value="Logout">
+    </form>
+{%else%}
+    <a href="{%url 'login' %}">Login</a>
+{%endif%}
+
+<h1>My TODO List</h1>
+
+<a href="{%url 'create-task' %}">add task</a>
+
+<form method="GET">
+    <input type="text" name="search-area" value="{{search_input}}">
+    <input type="submit" value="Search">
+</form>
+
+<table>
+    <tr>
+        <th>Items</th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    {%for task in tasks%}
+    <tr>
+        <td>{{task.title}}</td>
+        
+        <td><a href="{%url 'task-update' task.id%}">edit</a></td>
+        <td><a href="{%url 'task-delete' task.id%}">delete</a></td>
+    </tr>
+    {%empty%}
+    <h3>no items in the list</h3>
+    {%endfor%}
+</table>
+
+{% endblock content %}
